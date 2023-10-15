@@ -1,0 +1,7 @@
+config:
+  aws:region: us-east-1
+  conal-eks-cluster:desiredClusterSize: "3"
+  conal-eks-cluster:eksNodeInstanceType: t3.medium
+  conal-eks-cluster:maxClusterSize: "5"
+  conal-eks-cluster:minClusterSize: "3"
+  conal-eks-cluster:vpcNetworkCidr: 10.0.0.0/16
