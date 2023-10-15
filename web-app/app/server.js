@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-const pulumi = require('@pulumi/pulumi');
 
 // Constants
 const PORT = 8080;

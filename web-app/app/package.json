@@ -7,7 +7,6 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@pulumi/pulumi": "^3.88.1",
     "express": "latest"
   }
 }
