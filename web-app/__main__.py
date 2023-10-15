@@ -4,14 +4,18 @@ import pulumi
 from pulumi_kubernetes.apps.v1 import Deployment
 from pulumi_kubernetes.core.v1 import Service, Namespace
 from pulumi_kubernetes.networking.v1 import Ingress
-import pulumi_docker as docker
+#import pulumi_docker as docker
+from pulumi_docker import Image
 
 # Build the Docker image
-#docker_image = docker.Image(
+#image = Image(
 #    "web-app-image",
 #    image_name=pulumi.StackReference("cryan1988/aws-resources/dev").get_output("repository"),
-#    build=docker.DockerBuild(context='app/'),
-#)
+#    build="./app")
+
+# Retrieve the customMessage configuration variable
+config = pulumi.Config()
+custom_message = config.require('customMessage')
 
 # Define the Kubernetes namespace
 namespace = Namespace('web-app')
@@ -34,6 +38,7 @@ deployment = Deployment('web-app-deployment',
                     'name': 'web-app',
                     'image': '397008956043.dkr.ecr.us-east-1.amazonaws.com/dev-docker-images-78f25e8:latest',
                     'ports': [{'container_port': 8080}],
+                    'env': [{'name': 'MY_CUSTOM_MESSAGE', 'value': custom_message}],
                 }],
             },
         },
