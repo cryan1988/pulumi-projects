@@ -1,3 +1,4 @@
 config:
   docker:host: tcp://127.0.0.1:2376/
   web-app:customMessage: abc123
+  web-app:namespace_list: test-namespace,web-app,conal-test

@@ -6,6 +6,7 @@ from pulumi_kubernetes.core.v1 import Service, Namespace
 from pulumi_kubernetes.networking.v1 import Ingress
 #import pulumi_docker as docker
 from pulumi_docker import Image
+from namespace_component import NamespaceComponent
 
 # Build the Docker image
 #image = Image(
@@ -17,16 +18,24 @@ from pulumi_docker import Image
 config = pulumi.Config()
 custom_message = config.require('customMessage')
 
-# Create a namespace
-namespace = Namespace('web-app',
-    metadata={
-        'name': 'web-app',
-    })
+#Test creating numerous namespaces from config
+namespace_list = config.require('namespace_list').split(',')
+
+namespace_components = []
+
+# Create and export multiple namespace components based on the configured list
+for namespace in namespace_list:
+    namespace_component = NamespaceComponent(namespace)
+    namespace_components.append(namespace_component)
+
+# Export the list of namespace names for reference
+pulumi.export('all_namespace_names', [ns.namespace.metadata['name'] for ns in namespace_components])    
+
 
 # Create Deployment within the specified namespace
 deployment = Deployment('web-app-deployment',
     metadata={
-        'namespace': namespace.metadata['name'],
+        'namespace': 'web-app',
         'labels': {'app': 'web-app'},
         'name': 'web-app-deployment',
     },
@@ -54,7 +63,7 @@ deployment = Deployment('web-app-deployment',
 service = Service('web-app-service',
     metadata={
         'labels': {'app': 'web-app'},
-        'namespace': namespace.metadata['name'],
+        'namespace': 'web-app',
     },
     spec={
         'selector': {'app': 'web-app'},
