@@ -11,12 +11,13 @@ eks_node_instance_type = config.get("eksNodeInstanceType", "t3.medium")
 vpc_network_cidr = config.get("vpcNetworkCidr", "10.0.0.0/16")
 
 # Create a VPC for the EKS cluster
-eks_vpc = awsx.ec2.Vpc("eks-vpc",
-    enable_dns_hostnames=True,
-    cidr_block=vpc_network_cidr)
+eks_vpc = awsx.ec2.Vpc(
+    "eks-vpc", enable_dns_hostnames=True, cidr_block=vpc_network_cidr
+)
 
 # Create the EKS cluster
-eks_cluster = eks.Cluster("eks-cluster",
+eks_cluster = eks.Cluster(
+    "eks-cluster",
     # Put the cluster in the new VPC created earlier
     vpc_id=eks_vpc.vpc_id,
     # Public subnets will be used for load balancers
@@ -34,7 +35,7 @@ eks_cluster = eks.Cluster("eks-cluster",
     # Uncomment the next two lines for private cluster (VPN access required)
     # endpoint_private_access=true,
     # endpoint_public_access=false
-    )
+)
 
 # Export values to use elsewhere
 pulumi.export("kubeconfig", eks_cluster.kubeconfig)

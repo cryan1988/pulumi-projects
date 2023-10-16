@@ -2,6 +2,7 @@ import pulumi
 import pulumi_awsx as awsx
 import pulumi_eks as eks
 
+
 class EKSComponent(pulumi.ComponentResource):
     def __init__(self, name, config=None, opts=None):
         super().__init__("custom:eks:EKSComponent", name, None, opts)
@@ -15,14 +16,16 @@ class EKSComponent(pulumi.ComponentResource):
         vpc_network_cidr = config.get("vpcNetworkCidr", "10.0.0.0/16")
 
         # Create a VPC for the EKS cluster
-        eks_vpc = awsx.ec2.Vpc(f"{name}-vpc",
+        eks_vpc = awsx.ec2.Vpc(
+            f"{name}-vpc",
             enable_dns_hostnames=True,
             cidr_block=vpc_network_cidr,
             opts=pulumi.ResourceOptions(parent=self),
         )
 
         # Create the EKS cluster
-        eks_cluster = eks.Cluster(f"{name}-cluster",
+        eks_cluster = eks.Cluster(
+            f"{name}-cluster",
             # Put the cluster in the new VPC created earlier
             vpc_id=eks_vpc.vpc_id,
             # Public subnets will be used for load balancers
@@ -47,4 +50,4 @@ class EKSComponent(pulumi.ComponentResource):
         self.kubeconfig = eks_cluster.kubeconfig
         self.vpc_id = eks_vpc.vpc_id
 
-        self.register_outputs({})        
+        self.register_outputs({})
