@@ -17,22 +17,28 @@ from pulumi_docker import Image
 config = pulumi.Config()
 custom_message = config.require('customMessage')
 
-# Define the Kubernetes namespace
-namespace = Namespace('web-app')
+# Create a namespace
+namespace = Namespace('web-app',
+    metadata={
+        'name': 'web-app',
+    })
 
 # Create Deployment within the specified namespace
 deployment = Deployment('web-app-deployment',
     metadata={
         'namespace': namespace.metadata['name'],
         'labels': {'app': 'web-app'},
+        'name': 'web-app-deployment',
     },
     spec={
         'selector': {
             'match_labels': {'app': 'web-app'},
-        },
+        },        
         'replicas': 1,
         'template': {
-            'metadata': {'labels': {'app': 'web-app'}},
+            'metadata': {
+                'labels': {'app': 'web-app'},
+            },
             'spec': {
                 'containers': [{
                     'name': 'web-app',
