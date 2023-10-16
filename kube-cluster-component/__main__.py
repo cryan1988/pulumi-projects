@@ -11,4 +11,3 @@ pulumi.export("vpc_id", dev_eks_stack.vpc_id)
 
 pulumi.export("kubeconfig", stg_eks_stack.kubeconfig)
 pulumi.export("vpc_id", stg_eks_stack.vpc_id)
-
